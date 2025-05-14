@@ -1,0 +1,15 @@
+# backend (Maven)
+backend/target/
+backend/.mvn/
+backend/mvnw*
+backend/*.log
+
+# frontend (Node)
+frontend/node_modules/
+frontend/build/
+
+# gerais
+.env
+.DS_Store
+.idea/
+.vscode/
