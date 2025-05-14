@@ -1,0 +1,31 @@
+:root {
+  --bs-bg-main:    #1A1A1A;  /* fundo conteúdo */
+  --bs-bg-sidebar: #2A2A2A;  /* fundo da sidebar */
+  --bs-primary:    #0066FF;  /* foco / ativo */
+}
+
+/* Override das utilities do Bootstrap */
+.bg-main {
+  background-color: var(--bs-bg-main) !important;
+}
+.bg-sidebar {
+  background-color: var(--bs-bg-sidebar) !important;
+}
+.text-primary {
+  color: var(--bs-primary) !important;
+}
+.bg-primary {
+  background-color: var(--bs-primary) !important;
+}
+.btn-primary {
+  background-color: var(--bs-primary) !important;
+  border-color: var(--bs-primary) !important;
+}
+.btn-primary:hover {
+  background-color: #0052cc !important;
+  border-color: #0052cc !important;
+}
+/* nav-pills active */
+.nav-pills .nav-link.active {
+  background-color: var(--bs-primary) !important;
+}
