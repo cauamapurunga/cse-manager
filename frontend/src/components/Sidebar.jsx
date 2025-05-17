@@ -1,40 +1,64 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import logo from '../assets/cse.png'; // ajuste o path conforme sua estrutura
 
-export default function Sidebar({ onLogout }) {
-  const linkClass = ({ isActive }) =>
-    `nav-link text-white ${isActive ? 'active' : ''}`;
+export default function Sidebar({ onLogout, mobileClose }) {
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const links = [
+    ['Dashboard', '/home', 'bar-chart-line'],
+    ['Clientes', '/clientes', 'people'],
+    ['Agenda', '/agenda', 'calendar-event'],
+    ['Configurações', '/settings', 'gear'],
+  ];
+
+  const handleClick = (evt, to) => {
+    evt.preventDefault();
+    navigate(to);
+  };
+
+  const handleLogoutClick = (evt) => {
+    evt.preventDefault();
+    navigate('/login', { replace: true });
+    localStorage.removeItem('token');
+  };
 
   return (
-    <div className="d-flex flex-column h-100">
-      <h5 className="text-white mb-4">CSE Manager</h5>
+    <div className="d-flex flex-column h-100 p-3 bg-sidebar text-white">
+      {/* Exibe logo apenas no desktop (quando mobileClose é false) */}
+      {!mobileClose && (
+        <div className="sidebar-logo mb-4 text-center">
+          <img
+            src={logo}
+            alt="CSE Manager"
+            style={{ maxWidth: '150px', width: '100%' }}
+          />
+        </div>
+      )}
+
       <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item">
-          <NavLink to="/home" end className={linkClass}>
-            <i className="bi bi-bar-chart-line me-2"></i> Dashboard
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/clientes" className={linkClass}>
-            <i className="bi bi-people me-2"></i> Clientes
-          </NavLink>
-        </li>
-        <li className="nav-item">
-          <NavLink to="/agenda" className={linkClass}>
-            <i className="bi bi-calendar-event me-2"></i> Agenda
-          </NavLink>
-        </li>
-        <li className="nav-item mb-3">
-          <NavLink to="/settings" className={linkClass}>
-            <i className="bi bi-gear me-2"></i> Configurações
-          </NavLink>
-        </li>
+        {links.map(([label, to, icon]) => (
+          <li className="nav-item mb-2" key={to}>
+            <a
+              href={to}
+              className={`nav-link d-flex align-items-center ${pathname === to ? 'active bg-primary' : 'text-white'}`}
+              onClick={(e) => handleClick(e, to)}
+              {...(mobileClose ? { 'data-bs-dismiss': 'offcanvas' } : {})}
+            >
+              <i className={`bi bi-${icon} me-2`} />
+              {label}
+            </a>
+          </li>
+        ))}
       </ul>
+
       <button
-        className="btn btn-outline-danger mt-auto"
-        onClick={onLogout}
+        className="btn btn-outline-danger mt-auto d-flex align-items-center justify-content-center"
+        onClick={handleLogoutClick}
+        {...(mobileClose ? { 'data-bs-dismiss': 'offcanvas' } : {})}
       >
-        <i className="bi bi-box-arrow-right me-1"></i> Sair
+        <i className="bi bi-box-arrow-right me-2" /> Sair
       </button>
     </div>
   );

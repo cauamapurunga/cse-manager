@@ -1,31 +1,17 @@
 :root {
-  --bs-bg-main:    #1A1A1A;  /* fundo conteúdo */
-  --bs-bg-sidebar: #2A2A2A;  /* fundo da sidebar */
-  --bs-primary:    #0066FF;  /* foco / ativo */
+  --bs-bg-main:    #1A1A1A;
+  --bs-bg-sidebar: #2A2A2A;
+  --bs-primary:    #0066FF;
+}
+.bg-main    { background-color: var(--bs-bg-main) !important; }
+.bg-sidebar { background-color: var(--bs-bg-sidebar) !important; }
+.bg-primary { background-color: var(--bs-primary) !important; }
+
+@media (max-width: 991.98px) {
+  .offcanvas.offcanvas-start {
+    width: 75% !important;
+  }
 }
 
-/* Override das utilities do Bootstrap */
-.bg-main {
-  background-color: var(--bs-bg-main) !important;
-}
-.bg-sidebar {
-  background-color: var(--bs-bg-sidebar) !important;
-}
-.text-primary {
-  color: var(--bs-primary) !important;
-}
-.bg-primary {
-  background-color: var(--bs-primary) !important;
-}
-.btn-primary {
-  background-color: var(--bs-primary) !important;
-  border-color: var(--bs-primary) !important;
-}
-.btn-primary:hover {
-  background-color: #0052cc !important;
-  border-color: #0052cc !important;
-}
-/* nav-pills active */
-.nav-pills .nav-link.active {
-  background-color: var(--bs-primary) !important;
-}
+.nav-link { white-space: nowrap; transition: background 0.2s; }
+.nav-link.active { background-color: var(--bs-primary) !important; }
