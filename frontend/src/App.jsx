@@ -1,38 +1,32 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-
-import Login from './pages/Login';
+import Login    from './pages/Login';
 import Register from './pages/Register';
-import Home from './pages/Home';
-import Clients from './pages/Clients';
-import Agenda from './pages/Agenda';
-import Settings from './pages/Settings';
-
 import AppLayout from './layouts/AppLayout';
+import Home      from './pages/Home';
+import Clients   from './pages/Clients';
+import Agenda    from './pages/Agenda';
+import Settings  from './pages/Settings';
 import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute';
+import PublicRoute  from './components/PublicRoute';
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Página inicial redireciona para login */}
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login"    element={<PublicRoute><Login/></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register/></PublicRoute>} />
 
-        {/* Rotas públicas */}
-        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-
-        {/* Rotas protegidas (privadas) */}
-        <Route element={<PrivateRoute><AppLayout /></PrivateRoute>}>
-          <Route path="/home" element={<Home />} />
-          <Route path="/clientes" element={<Clients />} />
-          <Route path="/agenda" element={<Agenda />} />
-          <Route path="/settings" element={<Settings />} />
+        <Route element={<PrivateRoute><AppLayout/></PrivateRoute>}>
+          <Route path="/home"     element={<Home/>} />
+          <Route path="/clientes" element={<Clients/>} />
+          <Route path="/agenda"   element={<Agenda/>} />
+          <Route path="/settings" element={<Settings/>} />
+          <Route path="/"          element={<Navigate to="/home" replace/>} />
+          <Route path="*"          element={<Navigate to="/home" replace/>} />
         </Route>
 
-        {/* Rotas inválidas caem no login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace/>} />
       </Routes>
     </BrowserRouter>
   );
