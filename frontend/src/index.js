@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import './index.css'; 
-import axios from 'axios';
+import axios from 'axios'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-// Define a URL base para todas as requisições Axios
 axios.defaults.baseURL = 'http://localhost:8080';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
