@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import api from '../services/Api';
+import api from '../services/api';
 import { Modal, Button, Form, InputGroup } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import '../index.css'; // Certifique-se de importar o CSS global
+import '../index.css';
 
 export default function Clients() {
   const [clientes, setClientes]         = useState([]);
