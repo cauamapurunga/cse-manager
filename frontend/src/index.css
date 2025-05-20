@@ -5,13 +5,51 @@
 }
 .bg-main    { background-color: var(--bs-bg-main) !important; }
 .bg-sidebar { background-color: var(--bs-bg-sidebar) !important; }
-.bg-primary { background-color: var(--bs-primary) !important; }
+.bg-primary { background-color: var(--bs-primary)  !important; }
 
+/* força main ocupar toda a tela sem scroll horizontal */
+main {
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* estrutura header + tabela */
+.clients-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.clients-header {
+  flex: 0 0 auto;
+  padding: 1rem;
+}
+.clients-table {
+  flex: 1 1 auto;
+  overflow-y: auto;
+}
+
+/* fixa largura do offcanvas em telas menores que 992px */
 @media (max-width: 991.98px) {
   .offcanvas.offcanvas-start {
-    width: 75% !important;
+    width: 70% !important;
   }
 }
 
-.nav-link { white-space: nowrap; transition: background 0.2s; }
-.nav-link.active { background-color: var(--bs-primary) !important; }
+/* torna as células truncadas com "..." se excederem */
+.clients-table table th,
+.clients-table table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* garante ação do scroll só na tabela */
+.table-responsive {
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
+}
+
+/* navlink ativo */
+.nav-link.active {
+  background-color: var(--bs-primary) !important;
+}
