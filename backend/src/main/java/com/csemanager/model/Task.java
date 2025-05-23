@@ -1,11 +1,6 @@
 package com.csemanager.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tarefas")
@@ -21,18 +16,23 @@ public class Task {
     private String descricao;
 
     @Column(nullable = false)
-    private String status; // e.g. "PENDENTE", "CONCLUIDA"
+    private String status;
 
     private Integer prioridade;
 
-    // Construtores
+    // RELACIONAMENTO COM CLIENTE
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id", nullable = false)
+    private Cliente cliente;
+
     public Task() {}
 
-    public Task(String titulo, String descricao, String status, Integer prioridade) {
+    public Task(String titulo, String descricao, String status, Integer prioridade, Cliente cliente) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
         this.prioridade = prioridade;
+        this.cliente = cliente;
     }
 
     // Getters e Setters
@@ -74,5 +74,13 @@ public class Task {
 
     public void setPrioridade(Integer prioridade) {
         this.prioridade = prioridade;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 }
