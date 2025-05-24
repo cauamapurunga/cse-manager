@@ -1,7 +1,6 @@
 package com.csemanager.model;
 
 import jakarta.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "clientes")
@@ -25,24 +24,6 @@ public class Cliente {
     @Column(length = 1000)
     private String notas;
 
-    // RELAÇÃO COM TAREFAS
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
-    private List<Task> tarefas;
-
-    // Construtor vazio (obrigatório para JPA)
-    public Cliente() {}
-
-    // Construtor completo usado em conversões (ex: DTO → entidade)
-    public Cliente(Long id, String nome, String telefone, String endereco, String email, String notas) {
-        this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.endereco = endereco;
-        this.email = email;
-        this.notas = notas;
-    }
-
-    // Getters e setters
     public Long getId() {
         return id;
     }
@@ -89,13 +70,5 @@ public class Cliente {
 
     public void setNotas(String notas) {
         this.notas = notas;
-    }
-
-    public List<Task> getTarefas() {
-        return tarefas;
-    }
-
-    public void setTarefas(List<Task> tarefas) {
-        this.tarefas = tarefas;
     }
 }
