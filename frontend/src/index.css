@@ -53,3 +53,20 @@ main {
 .nav-link.active {
   background-color: var(--bs-primary) !important;
 }
+
+/* Scrollbar SUAVE nas colunas do kanban */
+.agenda-kanban .d-flex > div {
+  scrollbar-width: thin;
+  scrollbar-color: #363c48 #23292f;
+}
+
+/* Chrome, Edge, Safari */
+.agenda-kanban .d-flex > div::-webkit-scrollbar {
+  width: 7px;
+  background: #23292f;
+  border-radius: 8px;
+}
+.agenda-kanban .d-flex > div::-webkit-scrollbar-thumb {
+  background: #363c48;
+  border-radius: 8px;
+}

@@ -2,7 +2,9 @@ package com.csemanager.controller;
 
 import com.csemanager.dto.TaskDTO;
 import com.csemanager.model.Task;
+import com.csemanager.model.Cliente;
 import com.csemanager.repository.TaskRepository;
+import com.csemanager.repository.ClienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,14 +20,36 @@ public class TaskController {
     @Autowired
     private TaskRepository repository;
 
+    @Autowired
+    private ClienteRepository clienteRepository;
+
     // Converter entidade para DTO
     private TaskDTO toDTO(Task t) {
-        return new TaskDTO(t.getId(), t.getTitulo(), t.getDescricao(), t.getStatus(), t.getPrioridade());
+        Cliente c = t.getCliente();
+        return new TaskDTO(
+                t.getId(),
+                t.getTitulo(),
+                t.getDescricao(),
+                t.getStatus(),
+                t.getPrioridade(),
+                c != null ? c.getId() : null,
+                c != null ? c.getNome() : null,
+                c != null ? c.getEndereco() : null
+        );
     }
 
     // Converter DTO para entidade
     private Task toEntity(TaskDTO dto) {
-        return new Task(dto.getTitulo(), dto.getDescricao(), dto.getStatus(), dto.getPrioridade());
+        Task task = new Task();
+        task.setTitulo(dto.getTitulo());
+        task.setDescricao(dto.getDescricao());
+        task.setStatus(dto.getStatus());
+        task.setPrioridade(dto.getPrioridade());
+        if (dto.getClienteId() != null) {
+            Optional<Cliente> cliente = clienteRepository.findById(dto.getClienteId());
+            cliente.ifPresent(task::setCliente);
+        }
+        return task;
     }
 
     // Listar todas
@@ -61,6 +85,12 @@ public class TaskController {
                     task.setDescricao(dados.getDescricao());
                     task.setStatus(dados.getStatus());
                     task.setPrioridade(dados.getPrioridade());
+                    if (dados.getClienteId() != null) {
+                        Optional<Cliente> cliente = clienteRepository.findById(dados.getClienteId());
+                        cliente.ifPresent(task::setCliente);
+                    } else {
+                        task.setCliente(null);
+                    }
                     Task atualizado = repository.save(task);
                     return ResponseEntity.ok(toDTO(atualizado));
                 })
