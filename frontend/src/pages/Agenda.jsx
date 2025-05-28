@@ -8,7 +8,8 @@ import {
   Form,
   Row,
   Col,
-  Container
+  Container,
+  InputGroup
 } from 'react-bootstrap';
 import {
   DndContext,
@@ -88,6 +89,8 @@ export default function Agenda() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 900);
   const [validated, setValidated] = useState(false);
   const [clienteFiltro, setClienteFiltro] = useState('');
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [tarefaParaExcluir, setTarefaParaExcluir] = useState(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -119,7 +122,8 @@ export default function Agenda() {
         descricao: '',
         status: 'EM_ABERTO',
         prioridade: 2,
-        clienteId: ''
+        clienteId: '',
+        dataServico: ''
       }
     );
     setClienteFiltro('');
@@ -134,10 +138,27 @@ export default function Agenda() {
     setClienteFiltro('');
   }
 
+  function handleShowConfirm(tarefaId) {
+    setTarefaParaExcluir(tarefaId);
+    setShowConfirm(true);
+  }
+  function handleCloseConfirm() {
+    setTarefaParaExcluir(null);
+    setShowConfirm(false);
+  }
+
+  async function handleConfirmDelete() {
+    if (tarefaParaExcluir) {
+      await api.delete(`/tarefas/${tarefaParaExcluir}`);
+      fetchTarefas();
+      handleCloseConfirm();
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setValidated(true);
-    if (!modalData?.titulo || !modalData?.clienteId) return;
+    if (!modalData?.titulo || !modalData?.clienteId || !modalData?.dataServico) return;
     try {
       if (modalData.id) {
         await api.put(`/tarefas/${modalData.id}`, modalData);
@@ -148,13 +169,6 @@ export default function Agenda() {
       closeModal();
     } catch {
       alert('Erro ao salvar tarefa');
-    }
-  }
-
-  async function handleDelete(id) {
-    if (window.confirm('Deseja excluir esta tarefa?')) {
-      await api.delete(`/tarefas/${id}`);
-      fetchTarefas();
     }
   }
 
@@ -223,14 +237,14 @@ export default function Agenda() {
                   width: '100%',
                   flexDirection: 'column',
                   overflowY: 'auto',
-                  height: 'calc(95vh - 120px)', // maior altura!
+                  height: 'calc(95vh - 120px)',
                   minHeight: 450,
                   paddingBottom: 20
                 }
               : {
                   width: '100%',
                   flex: 1,
-                  height: 'calc(90vh - 140px)', // maior altura desktop!
+                  height: 'calc(90vh - 140px)',
                   minHeight: 450,
                   alignItems: 'stretch',
                 }
@@ -309,23 +323,30 @@ export default function Agenda() {
                               variant="outline-danger"
                               size="sm"
                               title="Excluir"
-                              onClick={() => handleDelete(tarefa.id)}
+                              onClick={() => handleShowConfirm(tarefa.id)}
                               style={{ borderRadius: 8, border: '1px solid #dc3545', background: 'transparent' }}
                             >
                               <i className="bi bi-trash-fill" />
                             </Button>
                           </div>
                         </div>
-                        <div className="mb-1" style={{ color: '#e7e9ea', opacity: .94, fontSize: 14 }}>
+                        <div className="mb-1" style={{ color: '#e7e9ea', opacity: .94, fontSize: 14, whiteSpace: 'pre-line', overflowWrap: 'break-word' }}>
                           {tarefa.descricao || <span className="text-secondary">Sem descrição</span>}
                         </div>
-                        <div className="small mt-2" style={{ color: '#fff' }}>
+                        <div className="small mt-2" style={{ color: '#b0c4d8' }}>
                           <i className="bi bi-person me-1 text-primary" />
                           {clienteInfo.nome}
                         </div>
-                        <div className="small mt-1 mb-1" style={{ color: '#b0c4d8' }}>
+                        <div className="small mt-1" style={{ color: '#b0c4d8' }}>
                           <i className="bi bi-geo-alt me-1 text-primary" />
                           {clienteInfo.endereco}
+                        </div>
+                        <div className="small mt-1" style={{ color: '#b0c4d8' }}>
+                          <i className="bi bi-calendar-event me-1 text-primary" />
+                          {tarefa.dataServico
+                            ? new Date(tarefa.dataServico).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                            : <span className="text-secondary">Sem data</span>
+                          }
                         </div>
                       </Card.Body>
                     </Card>
@@ -337,6 +358,7 @@ export default function Agenda() {
         </div>
       </DndContext>
       <div style={{ height: 30 }} />
+
       {/* MODAL DE CRIAR/EDITAR */}
       <Modal show={!!showModal} onHide={closeModal} centered>
         <Modal.Header closeButton className="bg-dark text-white">
@@ -367,6 +389,19 @@ export default function Agenda() {
               />
             </Form.Group>
             <Form.Group className="mb-2">
+              <Form.Label>Data do Serviço*</Form.Label>
+              <Form.Control
+                type="date"
+                value={modalData?.dataServico || ''}
+                onChange={e => setModalData(d => ({ ...d, dataServico: e.target.value }))}
+                required
+                isInvalid={validated && !modalData?.dataServico}
+              />
+              <Form.Control.Feedback type="invalid">
+                A data é obrigatória
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Prioridade</Form.Label>
               <Form.Select
                 value={modalData?.prioridade || 2}
@@ -379,30 +414,40 @@ export default function Agenda() {
             </Form.Group>
             <Form.Group className="mb-2">
               <Form.Label>Cliente*</Form.Label>
-              {/* Campo de busca melhorado para não cortar, 100% largura */}
-              <input
-                type="text"
-                placeholder="Filtrar por nome ou endereço..."
-                value={clienteFiltro}
-                onChange={e => setClienteFiltro(e.target.value)}
-                autoComplete="off"
-                style={{
-                  marginBottom: 8,
-                  borderRadius: 6,
-                  border: '1px solid #2c2f34',
-                  background: '#212529',
-                  color: '#eee',
-                  padding: '10px 12px',
-                  outline: 'none',
-                  width: '100%',
-                  fontSize: 15
-                }}
-              />
+              <InputGroup className="mb-2">
+                <InputGroup.Text style={{
+                  background: '#fff',
+                  borderRight: 0,
+                  borderTopLeftRadius: 8,
+                  borderBottomLeftRadius: 8,
+                  border: '1px solid #ced4da',
+                  borderRightWidth: 0,
+                  paddingLeft: 10,
+                  paddingRight: 10
+                }}>
+                  <i className="bi bi-search" style={{ color: '#0066FF', fontSize: 18 }} />
+                </InputGroup.Text>
+                <Form.Control
+                  type="text"
+                  placeholder="Filtrar por nome ou endereço..."
+                  value={clienteFiltro}
+                  onChange={e => setClienteFiltro(e.target.value)}
+                  style={{
+                    background: '#fff',
+                    borderLeft: 0,
+                    borderTopRightRadius: 8,
+                    borderBottomRightRadius: 8,
+                    border: '1px solid #ced4da'
+                  }}
+                  autoComplete="off"
+                />
+              </InputGroup>
               <Form.Select
                 value={modalData?.clienteId || ''}
                 onChange={e => setModalData(d => ({ ...d, clienteId: e.target.value }))}
                 required
                 isInvalid={validated && !modalData?.clienteId}
+                style={{ fontSize: 16, height: 40 }}
               >
                 <option value="">Selecione um cliente</option>
                 {clientesFiltrados.map(c => (
@@ -427,11 +472,29 @@ export default function Agenda() {
               </Form.Select>
             </Form.Group>
           </Modal.Body>
-          <Modal.Footer className="bg-dark">
+          <Modal.Footer className="bg-dark" style={{ borderTop: 'none' }}>
             <Button variant="secondary" onClick={closeModal}>Cancelar</Button>
             <Button variant="success" type="submit">Salvar</Button>
           </Modal.Footer>
         </Form>
+      </Modal>
+
+      {/* MODAL CONFIRMAÇÃO DE EXCLUSÃO */}
+      <Modal show={showConfirm} onHide={handleCloseConfirm} centered>
+        <Modal.Header closeButton className="bg-dark text-white">
+          <Modal.Title>Confirmar Exclusão</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="bg-dark text-white" style={{ textAlign: 'center', fontSize: 16 }}>
+          Tem certeza que deseja <b>excluir esta tarefa?</b>
+        </Modal.Body>
+        <Modal.Footer className="bg-dark" style={{ borderTop: 'none' }}>
+          <Button variant="secondary" onClick={handleCloseConfirm}>
+            Cancelar
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            Excluir
+          </Button>
+        </Modal.Footer>
       </Modal>
     </Container>
   );

@@ -9,11 +9,12 @@ public class TaskDTO {
     private Long clienteId;
     private String clienteNome;
     private String clienteEndereco;
+    private String dataServico;
 
     public TaskDTO() {}
 
     public TaskDTO(Long id, String titulo, String descricao, String status, Integer prioridade,
-                   Long clienteId, String clienteNome, String clienteEndereco) {
+                   Long clienteId, String clienteNome, String clienteEndereco, String dataServico) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
@@ -22,9 +23,9 @@ public class TaskDTO {
         this.clienteId = clienteId;
         this.clienteNome = clienteNome;
         this.clienteEndereco = clienteEndereco;
+        this.dataServico = dataServico;
     }
 
-    // Getters e setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -48,4 +49,7 @@ public class TaskDTO {
 
     public String getClienteEndereco() { return clienteEndereco; }
     public void setClienteEndereco(String clienteEndereco) { this.clienteEndereco = clienteEndereco; }
+
+    public String getDataServico() { return dataServico; }
+    public void setDataServico(String dataServico) { this.dataServico = dataServico; }
 }

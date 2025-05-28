@@ -1,6 +1,7 @@
 package com.csemanager.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tarefas")
@@ -24,6 +25,9 @@ public class Task {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @Column(name = "data_servico")
+    private LocalDate dataServico;
+
     // Getters e setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -42,4 +46,7 @@ public class Task {
 
     public Cliente getCliente() { return cliente; }
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
+
+    public LocalDate getDataServico() { return dataServico; }
+    public void setDataServico(LocalDate dataServico) { this.dataServico = dataServico; }
 }

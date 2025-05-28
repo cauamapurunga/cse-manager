@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +25,8 @@ public class TaskController {
     @Autowired
     private ClienteRepository clienteRepository;
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     // Converter entidade para DTO
     private TaskDTO toDTO(Task t) {
         Cliente c = t.getCliente();
@@ -34,7 +38,8 @@ public class TaskController {
                 t.getPrioridade(),
                 c != null ? c.getId() : null,
                 c != null ? c.getNome() : null,
-                c != null ? c.getEndereco() : null
+                c != null ? c.getEndereco() : null,
+                t.getDataServico() != null ? t.getDataServico().format(DATE_FORMATTER) : null
         );
     }
 
@@ -48,6 +53,9 @@ public class TaskController {
         if (dto.getClienteId() != null) {
             Optional<Cliente> cliente = clienteRepository.findById(dto.getClienteId());
             cliente.ifPresent(task::setCliente);
+        }
+        if (dto.getDataServico() != null && !dto.getDataServico().isEmpty()) {
+            task.setDataServico(LocalDate.parse(dto.getDataServico(), DATE_FORMATTER));
         }
         return task;
     }
@@ -90,6 +98,11 @@ public class TaskController {
                         cliente.ifPresent(task::setCliente);
                     } else {
                         task.setCliente(null);
+                    }
+                    if (dados.getDataServico() != null && !dados.getDataServico().isEmpty()) {
+                        task.setDataServico(LocalDate.parse(dados.getDataServico(), DATE_FORMATTER));
+                    } else {
+                        task.setDataServico(null);
                     }
                     Task atualizado = repository.save(task);
                     return ResponseEntity.ok(toDTO(atualizado));
