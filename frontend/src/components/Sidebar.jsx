@@ -6,11 +6,13 @@ import logo from '../assets/cse.png'; // ajuste o path conforme sua estrutura
 export default function Sidebar({ onLogout, mobileClose }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
   const links = [
     ['Dashboard', '/home', 'bar-chart-line'],
     ['Clientes', '/clientes', 'people'],
     ['Agenda', '/agenda', 'calendar-event'],
-    ['Configurações', '/settings', 'gear'],
+    ['Orçamentos', '/orcamentos', 'file-earmark-text'], // <-- novo item
+    ['Configurações', '/settings', 'gear']
   ];
 
   const handleClick = (evt, to) => {

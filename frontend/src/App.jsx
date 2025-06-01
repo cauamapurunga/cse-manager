@@ -6,11 +6,14 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import Clients from './pages/Clients';
 import Agenda from './pages/Agenda';
+import Orcamentos from './pages/Orcamentos';
 import Settings from './pages/Settings';
 
 import AppLayout from './layouts/AppLayout';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+
+
 
 export default function App() {
   return (
@@ -28,6 +31,7 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/clientes" element={<Clients />} />
           <Route path="/agenda" element={<Agenda />} />
+          <Route path="/orcamentos" element={<Orcamentos />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
 
