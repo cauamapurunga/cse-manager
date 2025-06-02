@@ -245,7 +245,7 @@ export default function Orcamentos() {
       pdf.setFont(undefined, 'bold');
       pdf.text('CSE & REFRIGERAÇÃO', 15, y + 6);
       pdf.text('Weyne Arruda', 15, y + 12);
-      pdf.save('orcamento.pdf');
+      pdf.save(`Orçamento ${clienteObj?.nome}.pdf`);
     };
   };
 
