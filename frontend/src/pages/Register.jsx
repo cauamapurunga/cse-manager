@@ -7,6 +7,7 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [secretKey, setSecretKey] = useState('');
   const [focusField, setFocusField] = useState(null);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -22,7 +23,7 @@ export default function Register() {
     e.preventDefault();
     setError('');
     try {
-      await axios.post('/auth/register', { name, email, password });
+      await axios.post('/auth/register', { name, email, password, secretKey });
       navigate('/login');
     } catch {
       setError('Erro ao criar conta');
@@ -70,7 +71,7 @@ export default function Register() {
     fontSize: 20,
     color: focusField === field ? '#0066FF' : '#FFF',
     marginRight: 16,
-    cursor: field === 'password' ? 'pointer' : undefined,
+    cursor: field === 'password' || field === 'secretKey' ? 'pointer' : undefined,
   });
   const inputStyle = {
     flex: 1,
@@ -88,16 +89,38 @@ export default function Register() {
         <h1 style={{ fontSize: isMobile ? '2rem' : '4rem', fontWeight: 700, margin: 0 }}>
           CSE Manager
         </h1>
-        <p style={{ fontSize: isMobile ? '1rem' : '1.5rem', marginTop: '0.5rem', textAlign: 'center' }}>
+        <p
+          style={{
+            fontSize: isMobile ? '1rem' : '1.5rem',
+            marginTop: '0.5rem',
+            textAlign: 'center',
+          }}
+        >
           Crie sua conta e gerencie sua empresa de refrigeração
         </p>
       </div>
       <div style={{ ...formStyle, order: isMobile ? 1 : 0 }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
-          <h2 style={{ fontSize: isMobile ? '1.75rem' : '2.5rem', fontWeight: 700, color: '#FFF', textAlign: 'center', marginBottom: '1rem' }}>
+          <h2
+            style={{
+              fontSize: isMobile ? '1.75rem' : '2.5rem',
+              fontWeight: 700,
+              color: '#FFF',
+              textAlign: 'center',
+              marginBottom: '1rem',
+            }}
+          >
             Criar Conta
           </h2>
-          <p style={{ color: '#a0a0a0', fontSize: isMobile ? '1rem' : '1.125rem', lineHeight: 1.5, textAlign: 'center', marginBottom: '1.5rem' }}>
+          <p
+            style={{
+              color: '#a0a0a0',
+              fontSize: isMobile ? '1rem' : '1.125rem',
+              lineHeight: 1.5,
+              textAlign: 'center',
+              marginBottom: '1.5rem',
+            }}
+          >
             Preencha seus dados para começar
           </p>
           {error && <div style={{ color: '#dc3545', marginBottom: '1rem' }}>{error}</div>}
@@ -141,6 +164,19 @@ export default function Register() {
                 required
               />
             </div>
+            <div style={wrapperStyle('secretKey')}>
+              <i className="bi bi-key-fill" style={iconStyle('secretKey')} />
+              <input
+                type="password"
+                placeholder="Digite a chave secreta"
+                value={secretKey}
+                onChange={(e) => setSecretKey(e.target.value)}
+                onFocus={() => setFocusField('secretKey')}
+                onBlur={() => setFocusField(null)}
+                style={inputStyle}
+                required
+              />
+            </div>
             <button
               type="submit"
               style={{
@@ -159,11 +195,22 @@ export default function Register() {
               Criar Conta
             </button>
           </form>
-          <div style={{ textAlign: 'center', color: '#a0a0a0', fontSize: isMobile ? 14 : 16 }}>
+          <div
+            style={{
+              textAlign: 'center',
+              color: '#a0a0a0',
+              fontSize: isMobile ? 14 : 16,
+            }}
+          >
             Já tem uma conta?{' '}
             <button
               type="button"
-              style={{ background: 'none', border: 'none', color: '#0066FF', cursor: 'pointer' }}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#0066FF',
+                cursor: 'pointer',
+              }}
               onClick={() => navigate('/login')}
             >
               Entrar

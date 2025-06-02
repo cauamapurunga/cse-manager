@@ -6,12 +6,10 @@ import com.csemanager.dto.ResponseDTO;
 import com.csemanager.model.User;
 import com.csemanager.repository.UserRepository;
 import com.csemanager.security.TokenService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -22,15 +20,23 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public AuthController(UserRepository repository, PasswordEncoder passwordEncoder, TokenService tokenService) {
+    @Value("${registration.secret.key}")
+    private String registrationSecretKey;
+
+    public AuthController(
+            UserRepository repository,
+            PasswordEncoder passwordEncoder,
+            TokenService tokenService
+    ) {
         this.repository = repository;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginRequestDTO body) {
-        User user = this.repository.findByEmail(body.email()).orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<?> login(@RequestBody LoginRequestDTO body) {
+        User user = repository.findByEmail(body.email())
+                .orElseThrow(() -> new RuntimeException("User not found"));
         if (passwordEncoder.matches(body.password(), user.getPassword())) {
             String token = tokenService.generateToken(user);
             return ResponseEntity.ok(new ResponseDTO(user.getId(), token));
@@ -39,19 +45,23 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterRequestDTO body){
-        Optional<User> user = this.repository.findByEmail(body.email());
-
-        if(user.isEmpty()) {
-            User newUser = new User();
-            newUser.setPassword(passwordEncoder.encode(body.password()));
-            newUser.setEmail(body.email());
-            newUser.setName(body.name());
-            this.repository.save(newUser);
-
-            String token = this.tokenService.generateToken(newUser);
-            return ResponseEntity.ok(new ResponseDTO(newUser.getName(), token));
+    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO dto) {
+        if (!registrationSecretKey.equals(dto.secretKey())) {
+            return ResponseEntity.status(403).body("Chave secreta inválida.");
         }
-        return ResponseEntity.badRequest().build();
+
+        Optional<User> userOpt = repository.findByEmail(dto.email());
+        if (userOpt.isPresent()) {
+            return ResponseEntity.badRequest().body("Já existe usuário com este e-mail.");
+        }
+
+        User newUser = new User();
+        newUser.setName(dto.name());
+        newUser.setEmail(dto.email());
+        newUser.setPassword(passwordEncoder.encode(dto.password()));
+        repository.save(newUser);
+
+        String token = tokenService.generateToken(newUser);
+        return ResponseEntity.ok(new ResponseDTO(newUser.getId(), token));
     }
 }
