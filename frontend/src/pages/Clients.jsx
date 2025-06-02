@@ -139,26 +139,31 @@ export default function Clients() {
         </Col>
       </Row>
 
-      {/* Botões de ações em cards e tabela atualizados */}
       <div style={{ flex: 1, overflowY: 'auto', WebkitOverflowScrolling: 'touch' }}>
         {isMobile ? (
           <Row xs={1} className="g-3">
             {filtered.map(c => (
               <Col key={c.id}>
-                <Card className="border-primary shadow-sm">
+                <Card className="bg-dark text-white shadow-sm border-0">
                   <Card.Body>
-                    <Card.Title className="mb-1 text-dark">{c.nome}</Card.Title>
+                    <Card.Title className="mb-1">{c.nome}</Card.Title>
                     <Card.Subtitle className="mb-2 text-muted">{c.telefone}</Card.Subtitle>
-                    <Card.Text className="mb-1 text-dark">
+                    <Card.Text className="mb-1">
                       <i className="bi bi-geo-alt me-1 text-primary" />{c.endereco}
                     </Card.Text>
-                    <Card.Text className="mb-3 text-dark">
+                    <Card.Text className="mb-3">
                       <i className="bi bi-envelope me-1 text-primary" />{c.email || '—'}
                     </Card.Text>
                     <div className="d-flex justify-content-end gap-2">
-                      <Button variant="outline-primary" size="sm" onClick={() => onView(c)}><i className="bi bi-eye-fill" /></Button>
-                      <Button variant="outline-secondary" size="sm" onClick={() => onEdit(c)}><i className="bi bi-pencil-fill" /></Button>
-                      <Button variant="outline-danger" size="sm" onClick={() => onDelete(c)}><i className="bi bi-trash-fill" /></Button>
+                      <Button variant="outline-primary" size="sm" onClick={() => onView(c)}>
+                        <i className="bi bi-eye-fill" />
+                      </Button>
+                      <Button variant="outline-secondary" size="sm" onClick={() => onEdit(c)}>
+                        <i className="bi bi-pencil-fill" />
+                      </Button>
+                      <Button variant="outline-danger" size="sm" onClick={() => onDelete(c)}>
+                        <i className="bi bi-trash-fill" />
+                      </Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -184,9 +189,15 @@ export default function Clients() {
                   <td className="text-white">{c.endereco}</td>
                   <td className="text-white">{c.email || '—'}</td>
                   <td className="text-center">
-                    <Button variant="outline-primary" size="sm" onClick={() => onView(c)}><i className="bi bi-eye-fill" /></Button>{' '}
-                    <Button variant="outline-secondary" size="sm" onClick={() => onEdit(c)}><i className="bi bi-pencil-fill" /></Button>{' '}
-                    <Button variant="outline-danger" size="sm" onClick={() => onDelete(c)}><i className="bi bi-trash-fill" /></Button>
+                    <Button variant="outline-primary" size="sm" onClick={() => onView(c)} className="me-1">
+                      <i className="bi bi-eye-fill" />
+                    </Button>
+                    <Button variant="outline-secondary" size="sm" onClick={() => onEdit(c)} className="me-1">
+                      <i className="bi bi-pencil-fill" />
+                    </Button>
+                    <Button variant="outline-danger" size="sm" onClick={() => onDelete(c)}>
+                      <i className="bi bi-trash-fill" />
+                    </Button>
                   </td>
                 </tr>
               ))}
@@ -221,28 +232,72 @@ export default function Clients() {
           <Modal.Body className="bg-dark text-white">
             <Form.Group controlId="formNome" className="mb-3">
               <Form.Label>Nome*</Form.Label>
-              <Form.Control size="sm" type="text" value={form.nome} onChange={e => setForm(f => ({ ...f, nome: e.target.value }))} required isInvalid={!!fieldErrors.nome} />
-              <Form.Control.Feedback type="invalid">{fieldErrors.nome || 'O nome é obrigatório'}</Form.Control.Feedback>
+              <Form.Control
+                size="sm"
+                type="text"
+                value={form.nome}
+                onChange={e => setForm(f => ({ ...f, nome: e.target.value }))}
+                required
+                isInvalid={!!fieldErrors.nome}
+              />
+              <Form.Control.Feedback type="invalid">
+                {fieldErrors.nome || 'O nome é obrigatório'}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="formTelefone" className="mb-3">
               <Form.Label>Telefone*</Form.Label>
-              <Form.Control size="sm" type="text" value={form.telefone} onChange={e => setForm(f => ({ ...f, telefone: e.target.value }))} required isInvalid={!!fieldErrors.telefone} />
-              <Form.Control.Feedback type="invalid">{fieldErrors.telefone || 'O telefone é obrigatório'}</Form.Control.Feedback>
+              <Form.Control
+                size="sm"
+                type="text"
+                value={form.telefone}
+                onChange={e => setForm(f => ({ ...f, telefone: e.target.value }))}
+                required
+                isInvalid={!!fieldErrors.telefone}
+              />
+              <Form.Control.Feedback type="invalid">
+                {fieldErrors.telefone || 'O telefone é obrigatório'}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="formEndereco" className="mb-3">
               <Form.Label>Endereço*</Form.Label>
-              <Form.Control size="sm" type="text" value={form.endereco} onChange={e => setForm(f => ({ ...f, endereco: e.target.value }))} required isInvalid={!!fieldErrors.endereco} />
-              <Form.Control.Feedback type="invalid">{fieldErrors.endereco || 'O endereço é obrigatório'}</Form.Control.Feedback>
+              <Form.Control
+                size="sm"
+                type="text"
+                value={form.endereco}
+                onChange={e => setForm(f => ({ ...f, endereco: e.target.value }))}
+                required
+                isInvalid={!!fieldErrors.endereco}
+              />
+              <Form.Control.Feedback type="invalid">
+                {fieldErrors.endereco || 'O endereço é obrigatório'}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="formEmail" className="mb-3">
               <Form.Label>Email</Form.Label>
-              <Form.Control size="sm" type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} isInvalid={!!fieldErrors.email} />
-              <Form.Control.Feedback type="invalid">{fieldErrors.email}</Form.Control.Feedback>
+              <Form.Control
+                size="sm"
+                type="email"
+                value={form.email}
+                onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                isInvalid={!!fieldErrors.email}
+              />
+              <Form.Control.Feedback type="invalid">
+                {fieldErrors.email}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group controlId="formNotas" className="mb-3">
               <Form.Label>Notas</Form.Label>
-              <Form.Control size="sm" as="textarea" rows={3} value={form.notas} onChange={e => setForm(f => ({ ...f, notas: e.target.value }))} isInvalid={!!fieldErrors.notas} />
-              <Form.Control.Feedback type="invalid">{fieldErrors.notas}</Form.Control.Feedback>
+              <Form.Control
+                size="sm"
+                as="textarea"
+                rows={3}
+                value={form.notas}
+                onChange={e => setForm(f => ({ ...f, notas: e.target.value }))}
+                isInvalid={!!fieldErrors.notas}
+              />
+              <Form.Control.Feedback type="invalid">
+                {fieldErrors.notas}
+              </Form.Control.Feedback>
             </Form.Group>
           </Modal.Body>
           <Modal.Footer className="bg-dark">
