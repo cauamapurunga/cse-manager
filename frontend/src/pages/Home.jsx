@@ -139,9 +139,11 @@ export default function Dashboard() {
       </text>
     );
   }
+
+  // CustomTooltip ajustado para ler payload[0].payload.name e payload[0].payload.value
   function CustomTooltip({ active, payload }) {
     if (active && payload && payload.length) {
-      const { name, value } = payload[0];
+      const { name, value } = payload[0].payload;
       return (
         <div style={{
           background: '#23272b',
@@ -214,6 +216,7 @@ export default function Dashboard() {
             </Button>
           </Col>
         </Row>
+
         {/* CARDS */}
         <Row className="g-2 mb-2 mx-0">
           {[
@@ -273,6 +276,7 @@ export default function Dashboard() {
             </Col>
           ))}
         </Row>
+
         {/* GRÁFICOS */}
         <Row className="g-2 mb-2 mx-0">
           <Col xs={12} md={6} style={{ marginBottom: isMobile ? 10 : 0 }}>
@@ -357,6 +361,7 @@ export default function Dashboard() {
             </Card>
           </Col>
         </Row>
+
         {/* PRÓXIMAS TAREFAS */}
         <Row className="g-2 mx-0 mb-4">
           <Col xs={12}>

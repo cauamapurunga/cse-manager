@@ -11,6 +11,7 @@ import {
   ListGroup
 } from 'react-bootstrap';
 import jsPDF from 'jspdf';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 export default function Orcamentos() {
   const [clientes, setClientes] = useState([]);
@@ -24,7 +25,16 @@ export default function Orcamentos() {
   const [outrosTexto, setOutrosTexto] = useState('');
   const [outrosValor, setOutrosValor] = useState('');
   const [mensagemErro, setMensagemErro] = useState('');
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  // Detectar mudança de largura da tela
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Buscar clientes e tarefas ao montar
   useEffect(() => {
     (async () => {
       try {
@@ -41,6 +51,7 @@ export default function Orcamentos() {
     })();
   }, []);
 
+  // Filtrar clientes conforme entrada de texto
   useEffect(() => {
     const term = clienteBusca.toLowerCase();
     const filtrados = clientes.filter(
@@ -240,6 +251,7 @@ export default function Orcamentos() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      {/* Conteúdo principal com scroll */}
       <div style={{ flex: 1, overflowY: 'auto', background: '#181a1b', padding: '1rem 2rem' }}>
         <Container fluid>
           <Row>
@@ -259,27 +271,20 @@ export default function Orcamentos() {
             </Col>
           </Row>
 
+          {/* Busca de Cliente (no estilo solicitado) */}
           <Row className="mb-4">
-            <Col xs={12}>
+            <Col xs={12} md={6}>
               <Form.Group>
                 <Form.Label className="text-white">Cliente</Form.Label>
-                <InputGroup>
+                <InputGroup style={{ maxWidth: 1000 }}>
                   <InputGroup.Text
-                    style={{
-                      background: '#2c2f33',
-                      borderColor: '#444',
-                      color: '#6c757d'
-                    }}
+                    style={{ background: '#fff', border: '1px solid #ccc' }}
                   >
-                    <i
-                      className="bi bi-search"
-                      style={{ fontSize: '1.2rem', color: '#6c757d' }}
-                    />
+                    <i className="bi bi-search" />
                   </InputGroup.Text>
                   <Form.Control
                     type="text"
-                    placeholder="Buscar cliente por nome ou telefone"
-                    className="bg-dark text-white border-secondary"
+                    placeholder="Buscar cliente..."
                     value={clienteBusca}
                     onChange={(e) => {
                       setClienteBusca(e.target.value);
@@ -287,20 +292,20 @@ export default function Orcamentos() {
                         !e.target.value
                           .toLowerCase()
                           .includes(
-                            (clientes.find(
-                              (c) => String(c.id) === clienteSelecionado
-                            )?.nome || ''
+                            (clientes.find((c) => String(c.id) === clienteSelecionado)
+                              ?.nome || ''
                             ).toLowerCase()
                           )
                       ) {
                         setClienteSel('');
                       }
                     }}
+                    style={{ background: '#fff', border: '1px solid #ccc' }}
                     autoComplete="off"
-                    style={{ borderLeft: '0' }}
                   />
                 </InputGroup>
 
+                {/* Dropdown com os resultados filtrados */}
                 {clienteBusca.length > 0 && !clienteSelecionado && (
                   <Card
                     className="bg-black border-secondary mt-1"
@@ -330,6 +335,7 @@ export default function Orcamentos() {
                   </Card>
                 )}
 
+                {/* Se um cliente estiver selecionado, exibir os dados */}
                 {clienteSelecionado && clienteObj && (
                   <Card className="bg-black border-secondary rounded-3 text-white mt-2">
                     <Card.Body className="p-3 small">
@@ -351,14 +357,24 @@ export default function Orcamentos() {
 
           <hr className="border-secondary" />
 
+          {/* Serviços (Tarefas) – layout responsivo */}
           <Row className="my-4">
             <Col xs={12}>
               <Form.Label className="text-white">Serviços (Tarefas)</Form.Label>
-              <Row>
+              <div
+                style={{
+                  columnCount: isMobile ? 1 : 2,
+                  columnGap: '2rem'
+                }}
+              >
                 {tarefas
                   .filter((t) => t.titulo !== 'AA')
                   .map((tarefa) => (
-                    <Col xs={12} sm={6} key={tarefa.id} className="mb-3">
+                    <div
+                      key={tarefa.id}
+                      className="mb-2"
+                      style={{ breakInside: 'avoid' }}
+                    >
                       <Form.Check
                         type="checkbox"
                         label={tarefa.titulo}
@@ -377,10 +393,10 @@ export default function Orcamentos() {
                           }
                         />
                       )}
-                    </Col>
+                    </div>
                   ))}
 
-                <Col xs={12} className="mb-3">
+                <div className="mb-2" style={{ breakInside: 'avoid' }}>
                   <Form.Check
                     type="checkbox"
                     label="Outros (descrever problema)"
@@ -395,35 +411,38 @@ export default function Orcamentos() {
                     }
                   />
                   {tarefasSelecionadas.includes('outros') && (
-                    <Row className="g-2 mt-2">
-                      <Col xs={12} md={8}>
-                        <Form.Control
-                          as="textarea"
-                          rows={2}
-                          placeholder="Descreva o problema ou serviço"
-                          className="bg-dark text-white border-secondary"
-                          value={outrosTexto}
-                          onChange={(e) => setOutrosTexto(e.target.value)}
-                        />
-                      </Col>
-                      <Col xs={12} md={4}>
-                        <Form.Control
-                          type="number"
-                          placeholder="Valor (R$)"
-                          className="bg-dark text-white border-secondary"
-                          value={outrosValor}
-                          onChange={(e) => setOutrosValor(e.target.value)}
-                        />
-                      </Col>
-                    </Row>
+                    <div className="mt-2">
+                      <Row className="g-2">
+                        <Col xs={12} md={8}>
+                          <Form.Control
+                            as="textarea"
+                            rows={2}
+                            placeholder="Descreva o problema ou serviço"
+                            className="bg-dark text-white border-secondary"
+                            value={outrosTexto}
+                            onChange={(e) => setOutrosTexto(e.target.value)}
+                          />
+                        </Col>
+                        <Col xs={12} md={4}>
+                          <Form.Control
+                            type="number"
+                            placeholder="Valor (R$)"
+                            className="bg-dark text-white border-secondary"
+                            value={outrosValor}
+                            onChange={(e) => setOutrosValor(e.target.value)}
+                          />
+                        </Col>
+                      </Row>
+                    </div>
                   )}
-                </Col>
-              </Row>
+                </div>
+              </div>
             </Col>
           </Row>
 
           <hr className="border-secondary" />
 
+          {/* Equipamentos */}
           <Row className="my-4">
             <Col xs={12}>
               <Form.Label className="text-white">Equipamentos</Form.Label>
@@ -478,6 +497,7 @@ export default function Orcamentos() {
 
           <hr className="border-secondary" />
 
+          {/* Totais e botão Gerar PDF */}
           <Row className="align-items-center mb-5">
             <Col xs={12} md={8}>
               <Card className="bg-black border-secondary rounded-3 text-white">
