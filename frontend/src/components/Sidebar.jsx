@@ -9,9 +9,9 @@ export default function Sidebar({ onLogout, mobileClose }) {
 
   const links = [
     ['Dashboard', '/home', 'bar-chart-line'],
-    ['Clientes', '/clientes', 'people'],
     ['Agenda', '/agenda', 'calendar-event'],
-    ['Orçamentos', '/orcamentos', 'file-earmark-text'], // <-- novo item
+    ['Clientes', '/clientes', 'people'],
+    ['Orçamentos', '/orcamentos', 'file-earmark-text'],
     ['Configurações', '/settings', 'gear']
   ];
 

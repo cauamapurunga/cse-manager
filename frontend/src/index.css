@@ -70,3 +70,8 @@ main {
   background: #363c48;
   border-radius: 8px;
 }
+
+::placeholder {
+  color: #6c757d !important;
+  opacity: 1;
+}
