@@ -43,7 +43,9 @@ export default function Orcamentos() {
           api.get('/tarefas')
         ]);
         setClientes(resClientes.data);
-        setTarefas(resTarefas.data);
+        // filtrar tarefas que não estejam finalizadas
+        const somenteAtivas = resTarefas.data.filter(t => t.status !== 'FINALIZADO');
+        setTarefas(somenteAtivas);
         setClientesFiltrados(resClientes.data);
       } catch (err) {
         console.error('Erro ao carregar dados', err);
@@ -488,7 +490,8 @@ export default function Orcamentos() {
                 </Button>
                 {equipamentos.length > 0 && (
                   <span className="text-white">
-                    <strong>Total Equipamentos:</strong> R$ {totalEquipamentos.toFixed(2)}
+                    <strong>Total Equipamentos:</strong> R$
+                    {totalEquipamentos.toFixed(2)}
                   </span>
                 )}
               </div>
@@ -506,7 +509,8 @@ export default function Orcamentos() {
                     <strong>Total Serviços:</strong> R$ {totalServicos.toFixed(2)}
                   </div>
                   <div>
-                    <strong>Total Equipamentos:</strong> R$ {totalEquipamentos.toFixed(2)}
+                    <strong>Total Equipamentos:</strong> R${' '}
+                    {totalEquipamentos.toFixed(2)}
                   </div>
                   <hr className="my-2" />
                   <div className="fs-6">
