@@ -13,6 +13,7 @@ import {
 import api from '../services/api';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../index.css';
+import TipToast from '../components/TipToast';
 
 export default function Clients() {
   const [clients, setClients] = useState([]);
@@ -320,6 +321,7 @@ export default function Clients() {
           <Button variant="danger" onClick={handleDelete}>Excluir</Button>
         </Modal.Footer>
       </Modal>
+    <TipToast message="Clique nos ícones para visualizar, editar ou excluir um cliente rapidamente." />
     </Container>
   );
 }

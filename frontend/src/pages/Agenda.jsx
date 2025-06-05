@@ -23,6 +23,7 @@ import {
 } from '@dnd-kit/core';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import '../index.css';
+import TipToast from '../components/TipToast';
 
 const STATUS_LIST = [
   { value: 'EM_ABERTO', label: 'Em Aberto', color: '#0066FF' },
@@ -205,7 +206,6 @@ export default function Agenda() {
       className="py-3 agenda-kanban d-flex flex-column"
       style={{
         minHeight: '100vh',
-        background: '#181a1b',
         paddingLeft: isMobile ? 2 : 32,
         paddingRight: isMobile ? 2 : 32,
         paddingTop: isMobile ? 15 : 40
@@ -496,6 +496,7 @@ export default function Agenda() {
           </Button>
         </Modal.Footer>
       </Modal>
+    <TipToast message="Arraste e solte as tarefas entre as colunas para atualizar o status." />
     </Container>
   );
 }

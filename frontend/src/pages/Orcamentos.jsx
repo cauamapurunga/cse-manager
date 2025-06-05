@@ -12,6 +12,7 @@ import {
 } from 'react-bootstrap';
 import jsPDF from 'jspdf';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import TipToast from '../components/TipToast';
 
 export default function Orcamentos() {
   const [clientes, setClientes] = useState([]);
@@ -254,7 +255,7 @@ export default function Orcamentos() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       {/* Conteúdo principal com scroll */}
-      <div style={{ flex: 1, overflowY: 'auto', background: '#181a1b', padding: '1rem 2rem' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '1rem 2rem' }}>
         <Container fluid>
           <Row>
             <Col xs={12}>
@@ -530,6 +531,7 @@ export default function Orcamentos() {
               </Button>
             </Col>
           </Row>
+    <TipToast message="Selecione serviços e equipamentos; depois gere o PDF do orçamento com um só clique." />
         </Container>
       </div>
     </div>

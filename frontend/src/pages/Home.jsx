@@ -8,6 +8,7 @@ import {
   PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LabelList
 } from 'recharts';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import TipToast from '../components/TipToast';
 
 const STATUS_LABELS = {
   EM_ABERTO: 'Em Aberto',
@@ -167,7 +168,6 @@ export default function Dashboard() {
 
   return (
     <div style={{
-      background: '#181a1b',
       minHeight: '100vh',
       width: '100%',
       boxSizing: 'border-box',
@@ -428,6 +428,7 @@ export default function Dashboard() {
             </Card>
           </Col>
         </Row>
+        <TipToast message="Acompanhe pendências, progresso e próximos serviços em tempo real neste painel." />
       </Container>
     </div>
   );
