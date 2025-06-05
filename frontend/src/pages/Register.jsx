@@ -7,7 +7,9 @@ export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [secretKey, setSecretKey] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [focusField, setFocusField] = useState(null);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -22,6 +24,12 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem');
+      return;
+    }
+
     try {
       await axios.post('/auth/register', { name, email, password, secretKey });
       navigate('/login');
@@ -71,7 +79,7 @@ export default function Register() {
     fontSize: 20,
     color: focusField === field ? '#0066FF' : '#FFF',
     marginRight: 16,
-    cursor: field === 'password' || field === 'secretKey' ? 'pointer' : undefined,
+    cursor: field === 'password' || field === 'confirmPassword' || field === 'secretKey' ? 'pointer' : undefined,
   });
   const inputStyle = {
     flex: 1,
@@ -85,6 +93,7 @@ export default function Register() {
 
   return (
     <div style={containerStyle}>
+      {/* Blue Header */}
       <div style={{ ...headerStyle, order: isMobile ? 0 : 1 }}>
         <h1 style={{ fontSize: isMobile ? '2rem' : '4rem', fontWeight: 700, margin: 0 }}>
           CSE Manager
@@ -99,6 +108,8 @@ export default function Register() {
           Crie sua conta e gerencie sua empresa de refrigeração
         </p>
       </div>
+
+      {/* Form Section */}
       <div style={{ ...formStyle, order: isMobile ? 1 : 0 }}>
         <div style={{ width: '100%', maxWidth: 400 }}>
           <h2
@@ -123,8 +134,11 @@ export default function Register() {
           >
             Preencha seus dados para começar
           </p>
-          {error && <div style={{ color: '#dc3545', marginBottom: '1rem' }}>{error}</div>}
-          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '400px' }}>
+          {error && (
+            <div style={{ color: '#dc3545', marginBottom: '1rem' }}>{error}</div>
+          )}
+          <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: 400 }}>
+            {/* Nome */}
             <div style={wrapperStyle('name')}>
               <i className="bi bi-person-fill" style={iconStyle('name')} />
               <input
@@ -138,6 +152,7 @@ export default function Register() {
                 required
               />
             </div>
+            {/* Email */}
             <div style={wrapperStyle('email')}>
               <i className="bi bi-envelope-fill" style={iconStyle('email')} />
               <input
@@ -151,10 +166,11 @@ export default function Register() {
                 required
               />
             </div>
+            {/* Senha */}
             <div style={wrapperStyle('password')}>
               <i className="bi bi-lock-fill" style={iconStyle('password')} />
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Digite sua senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
@@ -163,7 +179,32 @@ export default function Register() {
                 style={inputStyle}
                 required
               />
+              <i
+                className={showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'}
+                style={{ fontSize: 20, color: focusField === 'password' ? '#0066FF' : '#FFF', marginLeft: 12, cursor: 'pointer' }}
+                onClick={() => setShowPassword((prev) => !prev)}
+              />
             </div>
+            {/* Confirmar Senha */}
+            <div style={wrapperStyle('confirmPassword')}>
+              <i className="bi bi-shield-lock-fill" style={iconStyle('confirmPassword')} />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Confirme sua senha"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onFocus={() => setFocusField('confirmPassword')}
+                onBlur={() => setFocusField(null)}
+                style={inputStyle}
+                required
+              />
+              <i
+                className={showPassword ? 'bi bi-eye-slash-fill' : 'bi bi-eye-fill'}
+                style={{ fontSize: 20, color: focusField === 'confirmPassword' ? '#0066FF' : '#FFF', marginLeft: 12, cursor: 'pointer' }}
+                onClick={() => setShowPassword((prev) => !prev)}
+              />
+            </div>
+            {/* Chave Secreta */}
             <div style={wrapperStyle('secretKey')}>
               <i className="bi bi-key-fill" style={iconStyle('secretKey')} />
               <input
