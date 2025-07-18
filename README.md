@@ -1,88 +1,112 @@
 # CSE Manager
 
-Plataforma para gestão de serviços de refrigeração
+<p align="center">
+  <strong>Uma plataforma completa para a gestão de serviços de refrigeração.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-21-007396?style=for-the-badge&logo=java&logoColor=white" alt="Java 21">
+  <img src="https://img.shields.io/badge/Spring_Boot-3.4.5-6DB33F?style=for-the-badge&logo=spring&logoColor=white" alt="Spring Boot 3.4.5">
+  <img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=white" alt="React 19">
+  <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
+</p>
+
+## Sobre o Projeto
+
+O **CSE Manager** é uma solução `full-stack` desenvolvida para centralizar e otimizar a gestão de operações de serviços. A arquitetura divide-se em dois componentes principais:
+
+* **Backend**: Uma API RESTful robusta, desenvolvida com Java e Spring Boot, responsável por toda a lógica de negócio, persistência de dados e segurança da aplicação.
+* **Frontend**: Uma Single-Page Application (SPA) reativa e dinâmica, construída com React, que consome a API do backend para fornecer a interface de utilizador.
+
+---
 
 ## Funcionalidades
 
-*   Autenticação de usuários (Login, Cadastro)
-*   Gerenciamento de clientes
-*   Agendamento de serviços e agenda
-*   Gerenciamento de orçamentos
-*   Configurações da aplicação
-*   Painel de Controle/Página Inicial
+-   **Autenticação Segura**: Sistema de login e registo com tokens JWT para garantir a segurança dos dados.
+-   **Dashboard de Métricas**: Painel de controle com gráficos que exibem uma visão geral das tarefas.
+-   **Gestão de Clientes (CRM)**: Interface completa para criar, visualizar, editar e apagar clientes.
+-   **Agenda Kanban**: Quadro interativo para organizar as tarefas por estado, com funcionalidade `drag-and-drop`.
+-   **Geração de Orçamentos**: Ferramenta para criar e exportar orçamentos detalhados em formato PDF.
+-   **Interface Responsiva**: Design adaptável para desktops e dispositivos móveis.
 
-## Tecnologias Utilizadas
+---
 
-**Backend:**
-*   Java
-*   Spring Boot
-*   Spring Security
-*   Spring Data JPA
-*   Maven
-*   MySQL
+## Demonstrações
 
-**Frontend:**
-*   JavaScript
-*   React
-*   React Router
-*   Axios
-*   Bootstrap
-*   Recharts
-*   Node.js/npm
+### **Login e Registo**
+![1](https://github.com/user-attachments/assets/67c0aabb-090e-426f-834b-5b01092649d1)
 
-## Pré-requisitos
+### **Dashboard Interativo**
+![2](https://github.com/user-attachments/assets/f11293c9-6f4f-41ea-8ece-7b962343348c)
 
-Para construir e executar este projeto, você precisará ter o seguinte instalado:
+### **Agenda Kanban**
+![3](https://github.com/user-attachments/assets/408e53d6-93e7-4822-b064-8549711e4265)
 
-*   Java JDK 21 ou superior
-*   Apache Maven
-*   Node.js e npm
-*   Servidor MySQL
+### **Gestão de Clientes**
+![4](https://github.com/user-attachments/assets/68b825be-0042-4a30-a100-ab3aac5333c8)
 
-## Instalação e Configuração
+### **Geração de Orçamentos**
+![5](https://github.com/user-attachments/assets/00a38efa-577f-47dd-991c-2d1dbe651dd2)
 
-Siga estes passos para colocar o projeto em funcionamento:
+---
+
+## Pilha Tecnológica
+
+| Componente | Tecnologias Utilizadas |
+| :--- | :--- |
+| **Backend** | Java 21, Spring Boot 3.4.5, Spring Security, Spring Data JPA, MySQL, Maven |
+| **Frontend**| React 19, React Router 7, Axios, Bootstrap 5, Recharts, Dnd-Kit, jspdf |
+
+---
+
+## Guia de Instalação e Execução
+
+Para executar o projeto localmente, siga os passos abaixo.
+
+### Pré-requisitos
+
+-   Java JDK 21 ou superior
+-   Apache Maven
+-   Node.js e npm
+-   Servidor MySQL
 
 ### Backend
 
-1.  **Navegue até o diretório do backend:**
+1.  **Navegue para o diretório do backend:**
     ```bash
     cd backend
     ```
-2.  **Configuração do Banco de Dados:**
-    *   Certifique-se de que você tem um servidor MySQL em execução.
-    *   Crie um banco de dados para a aplicação.
-    *   Configure a conexão com o banco de dados em `src/main/resources/application.properties`. Você precisará definir propriedades como `spring.datasource.url`, `spring.datasource.username`, e `spring.datasource.password`.
-    *(Observação: Pode ser necessário criar um arquivo `application.properties` se ele não existir, ou modificar um arquivo `application.yml` existente.)*
+
+2.  **Configure a Base de Dados:**
+    -   Certifique-se de que o seu servidor MySQL está em execução.
+    -   Crie uma base de dados com o nome `cse_manager`.
+    -   No ficheiro `src/main/resources/application.properties`, atualize as suas credenciais:
+        ```properties
+        spring.datasource.url=jdbc:mysql://localhost:3306/cse_manager?useSSL=false&serverTimezone=UTC
+        spring.datasource.username=seu_utilizador
+        spring.datasource.password=sua_senha
+        ```
 
 3.  **Execute a aplicação:**
     ```bash
     ./mvnw spring-boot:run
     ```
-    O servidor backend geralmente será iniciado em `http://localhost:8080`.
+    O servidor será iniciado em `http://localhost:8080`.
 
 ### Frontend
 
-1.  **Navegue até o diretório do frontend:**
+1.  **Navegue para o diretório do frontend:**
     ```bash
     cd frontend
     ```
+
 2.  **Instale as dependências:**
     ```bash
     npm install
     ```
+
 3.  **Inicie o servidor de desenvolvimento:**
     ```bash
     npm start
     ```
-    A aplicação frontend geralmente abrirá automaticamente no seu navegador, frequentemente em `http://localhost:3000`.
-
-4.  **Configuração da API:**
-    O frontend está configurado para se conectar à API do backend. Por padrão, ele pode assumir que o backend está rodando em `http://localhost:8080`. Se o seu backend estiver rodando em uma porta ou host diferente, você pode precisar ajustar a configuração do endpoint da API no código do frontend (normalmente em um arquivo como `src/services/api.js` ou um arquivo de configuração).
-
-## Estrutura do Projeto
-
-O projeto está organizado em dois diretórios principais:
-
-*   `backend/`: Contém a aplicação Java Spring Boot que fornece a API e a lógica de negócios.
-*   `frontend/`: Contém a aplicação React que fornece a interface do usuário.
+    A aplicação será aberta no seu navegador em `http://localhost:3000`.
